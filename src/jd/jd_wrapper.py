@@ -218,4 +218,3 @@ class JDWrapper(object):
         price = float(resp.json()[0]['p'])
         return 0 if not price or price < 0 else price
         # print('price', soup.find(class_='price').string)
-
