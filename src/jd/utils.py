@@ -1,10 +1,16 @@
 import json
 
 import requests
+from datetime import date
 
 COOKIES_FILE = 'jd.cookies'
 ORDER_LIST_KEYWORD = '我的订单'
 LOGIN_REQ = "欢迎登录"
+
+# 据说性能比strptime快
+def parse_ymd(s):
+    year_s, mon_s, day_s = s.split(' ')[0].split('-')
+    return date(int(year_s), int(mon_s), int(day_s))
 
 
 def tags_val(tag, key='', index=0):
