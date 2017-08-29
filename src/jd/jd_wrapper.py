@@ -218,3 +218,35 @@ class JDWrapper(object):
         price = float(resp.json()[0]['p'])
         return 0 if not price or price < 0 else price
         # print('price', soup.find(class_='price').string)
+
+    def price_protect(self, orderId, skuId):
+
+        # urlStr = 'https://sitepp-fm.jd.com/rest/pricepro/listSkus'
+        # payload = {
+        #     'orderId': orderId
+        # }
+        # resp = self.sess.post(
+        #     urlStr,
+        #     data=payload
+        # )
+        # if resp.status_code != requests.codes.OK:
+        #     print('申请价格保护失败')
+        # else:
+        #     print(resp.content)
+
+
+        url = 'https://sitepp-fm.jd.com/rest/pricepro/skuProtectApply'
+        payload = {
+            'orderId': orderId,
+            'skuId': skuId
+        }
+        resp = self.sess.post(
+            url,
+            data=payload,
+            cookies=self.cookies
+        )
+        resp.encoding = 'gbk'
+        if resp.status_code != requests.codes.OK:
+            print('申请价格保护失败')
+        else:
+            print(resp.content)
