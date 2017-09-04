@@ -10,14 +10,15 @@ def app():
         if not jd.login_by_qr():
             return
         soup = jd.get_order_list(1)
-    # handle_order_list(soup)
-    jd.price_protect("59856764134","1040870")
+    handle_order_list(soup)
+    # jd.price_protect("59856764134","1040870")
 
 
 def handle_order_list(soup):
     table = soup.find(class_='order-tb')
     order_list = table('tbody')
     for order in order_list:
+        items = []
         order_status = order.find(class_='order-status')
         if order_status and str.strip(order_status.string) == '已完成':
             deal_time = order.find(class_='dealtime').string
@@ -33,6 +34,7 @@ def handle_order_list(soup):
                     total_price = 0.0
                     for item_tag in items_tag:
                         item_id = item_tag['class'][1][2:]
+                        items.append(item_id)
                         goods_number_tag = item_tag.parent.find(class_='goods-number')
                         goods_number = int(
                             str.strip(goods_number_tag.string.replace('x', ''))) if goods_number_tag else 0
@@ -46,6 +48,9 @@ def handle_order_list(soup):
                     amount = float(amount_tag.find('span').string[4:]) if amount_tag else 0
                     print('现价', total_price)
                     print('当时价', amount)
+                    if (amount > total_price):
+                        for itm in items:
+                            jd.price_protect(order_id, itm)
                     print('\n')
 
 
